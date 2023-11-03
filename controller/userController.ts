@@ -1,23 +1,20 @@
-import * as db from "../fake-db";
+import * as db from '../fake-db'
 
-export const getUserByEmailIdAndPassword = async (
-  uname: string,
-  password: string
-) => {
-  let user = db.getUserByUsername(uname);
+export const getUserByEmailIdAndPassword = (uname: string, password: string) => {
+  let user = db.getUserByUsername(uname)
   if (user) {
     if (user.password === password) {
-      return user;
+      return user
     } else {
-      return null;
+      return null
     }
   }
-};
+}
 
-export const getUserById = async (id: string) => {
-  let user = db.getUser(id);
+export const getUserById = (id: number) => {
+  let user = db.getUser(id)
   if (user) {
-    return user;
+    return user
   }
-  return null;
-};
+  return null
+}
