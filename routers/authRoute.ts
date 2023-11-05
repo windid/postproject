@@ -3,7 +3,7 @@ import passport from '../middleware/passport'
 const router = express.Router()
 
 router.get('/login', async (req, res) => {
-  res.render('login')
+  res.render('login', { pageTitle: 'Login' })
 })
 
 router.post(
@@ -11,6 +11,7 @@ router.post(
   passport.authenticate('local', {
     successRedirect: '/posts',
     failureRedirect: '/auth/login',
+    failureFlash: true,
   })
 )
 

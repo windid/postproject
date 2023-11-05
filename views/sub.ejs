@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('./common/head', { title: 'Sub Groups' }); %>
-  <body>
-    <main>
-      <%- include('./common/header', { title: 'Sub Groups' , route: '' }); %>
-      <div>
-        <p><%=sub%></p>
-        <% posts.forEach(post=> { %>
-          <%- include('./common/post', { post }); %>
-        <% }) %>
-      </div>
-    </main>
-    <%- include('./common/footer'); %>
-  </body>
-</html>
+<%- include('./common/header', { title: 'Sub Groups' , route: '' }); %>
+<div>
+  <p><%=sub%></p>
+  <% posts.forEach(post=> { %> <%- include('./common/post', { post }); %> <% }) %>
+</div>

@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('./common/head', { title: 'Homepage' }); %>
-  <body>
-    <main>
-      <%- include('./common/header', { title: 'Homepage', route: 'Home' }); %>
-      <h2>Welcome, <%= user?.uname || "Visitor" %></h2>
-      <div>
-        <p>All Posts</p>
-        <% posts.forEach(post => { %>
-          <%- include('./common/post', { post }); %>
-        <% }) %>
-      </div>
-    </main>
-    <%- include('./common/footer'); %>
-  </body>
-</html>
+<%- include('./common/header', { title: 'Homepage', route: 'Home' }); %>
+<h2>Welcome, <%= user?.uname || "Visitor" %></h2>
+<div>
+  <p>All Posts</p>
+  <% posts.forEach(post => { %> <%- include('./common/post', { post }); %> <% }) %>
+</div>

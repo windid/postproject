@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('./common/head', { title: post.title }); %>
-  <body>
-    <main>
-      <%- include('./common/header', { title: 'View Post' , route: '' }); %>
-      <div>
-        <h2><%=post.title%></h2>
-        <p><%=post.description%></p>
-        <p><a href="<%=post.link%>"><%=post.link%></a></p>
-      </div>
-    </main>
-    <%- include('./common/footer'); %>
-  </body>
-</html>
+<%- include('./common/header', { title: 'View Post' , route: '' }); %>
+<div>
+  <h2><%=post.title%></h2>
+  <p><%=post.description%></p>
+  <p><a href="<%=post.link%>"><%=post.link%></a></p>
+</div>

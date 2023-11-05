@@ -1,9 +1,11 @@
 import express from 'express'
 import session from 'express-session'
 import passport from './middleware/passport'
+var expressLayouts = require('express-ejs-layouts')
 const PORT = process.env.PORT || 8000
 
 const app = express()
+app.use(expressLayouts)
 
 app.set('trust proxy', 1)
 app.set('view engine', 'ejs')

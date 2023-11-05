@@ -5,12 +5,17 @@ const router = express.Router()
 
 router.get('/list', async (req, res) => {
   const subs = await database.getSubs()
-  res.render('subs', { subs, user: req.user })
+  res.render('subs', { subs, user: req.user, pageTitle: 'Sub Groups' })
 })
 
 router.get('/show/:subname', async (req, res) => {
   const posts = await database.getPosts(20, req.params.subname)
-  res.render('sub', { posts, sub: req.params.subname, user: req.user })
+  res.render('sub', {
+    posts,
+    sub: req.params.subname,
+    user: req.user,
+    pageTitle: `Sub Group: ${req.params.subname}`,
+  })
 })
 
 export default router

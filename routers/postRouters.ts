@@ -6,12 +6,12 @@ import { ensureAuthenticated } from '../middleware/checkAuth'
 
 router.get('/', async (req, res) => {
   const posts = await database.getPosts(20)
-  res.render('posts', { posts, user: req.user })
+  res.render('posts', { posts, user: req.user, pageTitle: 'Home' })
 })
 
 router.get('/create', ensureAuthenticated, async (req, res) => {
   const subs = await database.getSubs()
-  res.render('createPosts', { subs, user: req.user })
+  res.render('createPosts', { subs, user: req.user, pageTitle: 'Create Post' })
 })
 
 router.post('/create', ensureAuthenticated, async (req, res) => {
@@ -20,7 +20,7 @@ router.post('/create', ensureAuthenticated, async (req, res) => {
 
 router.get('/show/:postid', async (req, res) => {
   const post = await database.getPost(req.params.postid)
-  res.render('individualPost', { post, user: req.user })
+  res.render('individualPost', { post, user: req.user, pageTitle: post.title })
 })
 
 router.get('/edit/:postid', ensureAuthenticated, async (req, res) => {
