@@ -104,7 +104,7 @@ function getPosts(n = 5, sub?: string) {
     allPosts = allPosts.filter((post) => post.subgroup === sub)
   }
   allPosts.sort((a, b) => b.timestamp - a.timestamp)
-  return allPosts.slice(0, n)
+  return allPosts.slice(0, n).map(decoratePost)
 }
 
 function getPost(id: number) {
@@ -118,8 +118,8 @@ function addPost(
   description: string,
   subgroup: string
 ): PostData {
-  let id = Math.max(...Object.keys(posts).map(Number)) + 1
-  let post: PostData = {
+  const id = Math.max(...Object.keys(posts).map(Number)) + 1
+  const post: PostData = {
     id,
     title,
     link,
@@ -133,7 +133,7 @@ function addPost(
 }
 
 function editPost(post_id: number, changes: Partial<PostData> = {}) {
-  let post = posts[post_id]
+  const post = posts[post_id]
   if (changes.title) {
     post.title = changes.title
   }
@@ -157,8 +157,8 @@ function getSubs() {
 }
 
 function addComment(post_id: number, creator: number, description: string): CommentData {
-  let id = Math.max(...Object.keys(comments).map(Number)) + 1
-  let comment = {
+  const id = Math.max(...Object.keys(comments).map(Number)) + 1
+  const comment = {
     id,
     post_id: Number(post_id),
     creator: Number(creator),

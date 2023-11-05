@@ -2,7 +2,6 @@ import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { getUserByEmailIdAndPassword, getUserById } from '../controller/userController'
 
-// ⭐ TODO: Passport Types
 const localLogin = new LocalStrategy(
   {
     usernameField: 'uname',
@@ -20,13 +19,11 @@ const localLogin = new LocalStrategy(
   }
 )
 
-// ⭐ TODO: Passport Types
 passport.serializeUser(function (user, done) {
   console.log('serialize: ' + user.id)
   done(null, user.id)
 })
 
-// ⭐ TODO: Passport Types
 passport.deserializeUser(function (id: number, done) {
   const user = getUserById(id)
   if (user) {

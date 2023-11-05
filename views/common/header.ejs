@@ -1,0 +1,26 @@
+<header class="header">
+    <h1> <%=title%> </h1>
+    <div style="flex: 1"></div>
+    <nav style="margin-right: 24px;">
+        <% if (route === 'Home') { %>
+            Home
+        <% } else { %>
+            <a href="/posts">Home</a>
+        <% } %>
+        <span style="margin: 0 24px">|</span>
+        <% if (route === 'Subgroups') { %>
+            Sub Groups
+        <% } else { %>
+            <a href="/subs/list">Sub Groups</a>
+        <% } %>
+        <span style="margin: 0 24px">|</span>
+        <% if (user) { %>
+            <a href="/auth/logout">Logout</a>
+        <% } %>
+    </nav>
+    <% if (!user) { %>
+        <a role="button" href="/auth/login">Login</a>
+    <% } else { %>
+        <a role="button" href="/posts/create">Create Post</a>
+    <% } %>
+</header>
