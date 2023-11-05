@@ -13,9 +13,11 @@
         <% } else { %>
             <a href="/subs/list">Sub Groups</a>
         <% } %>
-        <span style="margin: 0 24px">|</span>
+            <span style="margin: 0 24px">|</span>
         <% if (user) { %>
             <a href="/auth/logout">Logout</a>
+        <% } else { %>
+            <a href="/auth/register">Register</a>
         <% } %>
     </nav>
     <% if (!user) { %>
