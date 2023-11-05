@@ -1,12 +1,19 @@
-<div class="individualPost">
-    <a href="/posts/show/<%=post.id%>">
-        <%= post.title %>
-    </a>
-    <span style="padding: 0 24px; font-size: 24px;">/</span>
-    <span>
-        <%= post.creator.uname %>
-    </span>
-    <p style="opacity: 0.6;">
+<div class="post" style="margin-bottom: 24px;">
+    <div>
+        <a href="/posts/show/<%=post.id%>">
+            <%= post.title %>
+        </a>
+        <span style="padding: 0 24px; font-size: 24px;">/</span>
+        <span>
+            <%= post.creator.uname %>
+        </span>
+    </div>
+    <div style="opacity: 0.6;">
         <%= post.description %>
-    </p>
+    </div>
+    <div style="display: flex; align-items: center;">
+        <a class="triangle-up" href="<%=`/posts/vote/${post.id}/up`%>">&nbsp;</a>
+        <div style="margin: 0 12px"><%= post.votes.reduce((total, vote)=> vote.value + total ,0) %></div>
+        <a class="triangle-down" href="<%=`/posts/vote/${post.id}/down`%>">&nbsp;</a>
+    </div>
 </div>

@@ -16,3 +16,23 @@
   border-radius: 8px;
   box-shadow: 0 2px 16px rgba(255, 255, 255, 0.1);
 }
+
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #ccc;
+  font-size: 0;
+  line-height: 0;
+}
+
+.triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #ccc;
+  font-size: 0;
+  line-height: 0;
+}

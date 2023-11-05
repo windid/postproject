@@ -11,3 +11,7 @@ export async function getPost(id: number) {
 export async function getSubs() {
   return await db.getSubs()
 }
+
+export async function voteForPost(post_id: number, user_id: number, value: number) {
+  return await db.voteForPost(post_id, user_id, value)
+}

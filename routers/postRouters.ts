@@ -43,4 +43,10 @@ router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => 
   // ⭐ TODO
 })
 
+router.get('/vote/:postid/:direction', ensureAuthenticated, async (req, res) => {
+  const value = req.params.direction === 'up' ? 1 : -1
+  await database.voteForPost(parseInt(req.params.postid), req.user.id, value)
+  res.redirect(req.headers.referer)
+})
+
 export default router

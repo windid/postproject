@@ -83,6 +83,15 @@ function getVotesForPost(post_id: number) {
   return votes.filter((vote) => vote.post_id === post_id)
 }
 
+function voteForPost(post_id: number, user_id: number, value: number) {
+  const vote = votes.find((vote) => vote.post_id === post_id && vote.user_id === user_id)
+  if (vote) {
+    vote.value = value
+  } else {
+    votes.push({ post_id, user_id, value })
+  }
+}
+
 function decoratePost(post: PostData): Post {
   return {
     ...post,
@@ -181,4 +190,5 @@ export {
   getSubs,
   addComment,
   decoratePost,
+  voteForPost,
 }
