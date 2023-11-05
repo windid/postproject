@@ -17,22 +17,36 @@
   box-shadow: 0 2px 16px rgba(255, 255, 255, 0.1);
 }
 
-.triangle-down {
+.triangle {
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid #ccc;
   font-size: 0;
   line-height: 0;
+  transition: border-color 180ms ease;
 }
 
-.triangle-up {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #ccc;
-  font-size: 0;
-  line-height: 0;
+.triangle.down {
+  border-top: 10px solid #bbb;
+}
+
+.triangle.up {
+  border-bottom: 10px solid #bbb;
+}
+
+.triangle.down:hover {
+  border-top-color: #fff;
+}
+
+.triangle.down.voted {
+  border-top-color: #369;
+}
+
+.triangle.up:hover {
+  border-bottom-color: #fff;
+}
+
+.triangle.up.voted {
+  border-bottom-color: #a00;
 }
