@@ -2,7 +2,7 @@
 <div class="box">
   <h2>
     <span><%=post.title%></span>
-    <% if (post.creator.id === user.id) { %>
+    <% if (user && post.creator.id === user.id) { %>
     <a
       role="button"
       href="/posts/deleteconfirm/<%=post.id%>"

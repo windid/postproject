@@ -49,3 +49,17 @@
 .triangle.up.voted {
   border-bottom-color: #a00;
 }
+
+.orderby {
+  padding: 8px;
+}
+
+.orderby.selected {
+  color: #f63;
+  border-bottom: 3px solid #f63;
+}
+
+.orderby:hover {
+  color: #f63;
+  text-decoration: none;
+}

@@ -1,8 +1,8 @@
 import * as db from '../fake-db'
 import { PostData } from '../model'
 
-export async function getPosts(n = 5, sub?: string) {
-  return db.getPosts(n, sub)
+export async function getPosts(n = 5, orderby?: string, sub?: string) {
+  return db.getPosts(n, orderby, sub)
 }
 
 export async function getPost(id: number) {

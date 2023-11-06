@@ -41,7 +41,7 @@ const posts: { [key: number]: PostData } = {
       'An overview of databases that pair well with modern application and compute providers.',
     creator: 4,
     subgroup: 'coding',
-    timestamp: 1642611742010,
+    timestamp: 1643648446959,
   },
 }
 
@@ -71,13 +71,12 @@ function debug() {
   console.log('==== DB DEBUGING ====')
 }
 
-function getUser(id: number) {
+function getUser(id: number): Express.User | undefined {
   return users[id]
 }
 
 function getUserByUsername(uname: string) {
   return Object.values(users).find((user) => user.uname === uname)
-  // return getUser(Object.values(users).filter((user) => user.uname === uname)[0].id)
 }
 
 function createUser(uname: string, password: string) {
@@ -118,13 +117,37 @@ function decoratePost(post: PostData): Post {
  * @param {*} n how many posts to get, defaults to 5
  * @param {*} sub which sub to fetch, defaults to all subs
  */
-function getPosts(n = 5, sub?: string) {
+function getPosts(n = 5, orderby?: string, sub?: string) {
+  let compareFn: (a: Post, b: Post) => number
+  switch (orderby) {
+    case 'hot':
+      compareFn = (a, b) => {
+        const aVotes = a.votes.reduce((acc, vote) => acc + vote.value, 0)
+        const bVotes = b.votes.reduce((acc, vote) => acc + vote.value, 0)
+        const aComments = a.comments.length
+        const bComments = b.comments.length
+        return bVotes + bComments - (aVotes + aComments)
+      }
+      break
+    case 'votes':
+      compareFn = (a, b) => {
+        const aVotes = a.votes.reduce((acc, vote) => acc + vote.value, 0)
+        const bVotes = b.votes.reduce((acc, vote) => acc + vote.value, 0)
+        return bVotes - aVotes
+      }
+      break
+    case 'totalVotes':
+      compareFn = (a, b) => b.votes.length - a.votes.length
+      break
+    default: // date
+      compareFn = (a, b) => b.timestamp - a.timestamp
+  }
   let allPosts = Object.values(posts)
   if (sub) {
     allPosts = allPosts.filter((post) => post.subgroup === sub)
   }
-  allPosts.sort((a, b) => b.timestamp - a.timestamp)
-  return allPosts.slice(0, n).map(decoratePost)
+  const res = allPosts.map(decoratePost).sort(compareFn)
+  return res.slice(0, n)
 }
 
 function getPost(id: number) {

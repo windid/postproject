@@ -4,8 +4,9 @@ const router = express.Router()
 import { ensureAuthenticated } from '../middleware/checkAuth'
 
 router.get('/', async (req, res) => {
-  const posts = await database.getPosts(20)
-  res.render('posts', { posts, user: req.user, pageTitle: 'Home' })
+  const orderby = req.query.orderby?.toString() || 'date'
+  const posts = await database.getPosts(20, orderby)
+  res.render('posts', { posts, user: req.user, orderby, pageTitle: 'Home' })
 })
 
 router.get('/create', ensureAuthenticated, async (req, res) => {
