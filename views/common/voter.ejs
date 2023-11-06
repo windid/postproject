@@ -1,0 +1,15 @@
+<div style="display: flex; align-items: center">
+  <a
+    class="triangle up<%=(user && post.votes.find(v => v.user_id===user.id && v.value === 1)) && ' voted'%>"
+    href="<%=`/posts/vote/${post.id}/up`%>"
+  >
+    &nbsp;
+  </a>
+  <div style="margin: 0 12px"><%= post.votes.reduce((total, vote)=> vote.value + total ,0) %></div>
+  <a
+    class="triangle down<%=(user && post.votes.find(v => v.user_id===user.id && v.value === -1)) && ' voted'%>"
+    href="<%=`/posts/vote/${post.id}/down`%>"
+  >
+    &nbsp;
+  </a>
+</div>

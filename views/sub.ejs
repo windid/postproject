@@ -1,5 +1,5 @@
 <%- include('./common/header', { title: 'Sub Groups' , route: '' }); %>
-<div>
-  <p><%=sub%></p>
+<div class="box">
+  <h2><%=sub%></h2>
   <% posts.forEach(post=> { %> <%- include('./common/post', { post }); %> <% }) %>
 </div>

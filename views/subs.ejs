@@ -1,5 +1,5 @@
 <%- include('./common/header', { title: 'Sub Groups' , route: 'Subgroups' }); %>
-<ul>
+<ul class="box">
   <% subs.forEach(sub => { %>
   <li><a href="/subs/show/<%= sub %>"><%= sub %></a></li>
   <% }) %>

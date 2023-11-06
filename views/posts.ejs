@@ -1,6 +1,6 @@
 <%- include('./common/header', { title: 'Homepage', route: 'Home' }); %>
-<h2>Welcome, <%= user?.uname || "Visitor" %></h2>
-<div>
+<div class="box">
+  <h2>Welcome, <%= user?.uname || "Visitor" %></h2>
   <p>All Posts</p>
   <% posts.forEach(post => { %> <%- include('./common/post', { post }); %> <% }) %>
 </div>
