@@ -8,6 +8,16 @@ export async function getPost(id: number) {
   return db.getPost(id)
 }
 
+export async function createPost(
+  title: string,
+  link: string,
+  creator: number,
+  description: string,
+  subgroup: string
+) {
+  return await db.addPost(title, link, creator, description, subgroup)
+}
+
 export async function getSubs() {
   return await db.getSubs()
 }

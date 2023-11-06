@@ -1,2 +1,22 @@
 <%- include('./common/header', { title: 'Create Post' , route: '' }); %>
-<p>Implement this yourself. It comes from createPost.ejs</p>
+<div class="box">
+  <form action="/posts/create" method="post">
+    <div style="color: red; font-size: 16px; margin-bottom: 24px">&nbsp;<%= errMsg %></div>
+    <input type="text" id="title" name="title" placeholder="Title" />
+    <select name="subgroup" id="subgroup">
+      <option value="">Select a Sub Group</option>
+      <% subs.forEach(sub => { %>
+      <option value="<%=sub%>"><%=sub%></option>
+      <% }) %>
+    </select>
+    <input type="text" id="link" name="link" placeholder="Link" />
+    <textarea
+      name="description"
+      id="description"
+      cols="30"
+      rows="5"
+      placeholder="description"
+    ></textarea>
+    <input type="submit" value="Create Post" />
+  </form>
+</div>

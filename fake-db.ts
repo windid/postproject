@@ -128,6 +128,9 @@ function getPosts(n = 5, sub?: string) {
 }
 
 function getPost(id: number) {
+  if (!posts[id]) {
+    return null
+  }
   return decoratePost(posts[id])
 }
 
