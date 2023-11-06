@@ -76,7 +76,14 @@ function getUser(id: number) {
 }
 
 function getUserByUsername(uname: string) {
-  return getUser(Object.values(users).filter((user) => user.uname === uname)[0].id)
+  return Object.values(users).find((user) => user.uname === uname)
+  // return getUser(Object.values(users).filter((user) => user.uname === uname)[0].id)
+}
+
+function createUser(uname: string, password: string) {
+  const id = Math.max(...Object.keys(users).map(Number)) + 1
+  users[id] = { id, uname, password }
+  return users[id]
 }
 
 function getVotesForPost(post_id: number) {
@@ -186,6 +193,7 @@ export {
   debug,
   getUser,
   getUserByUsername,
+  createUser,
   getPosts,
   getPost,
   addPost,
