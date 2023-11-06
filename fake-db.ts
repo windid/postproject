@@ -172,7 +172,9 @@ function editPost(post_id: number, changes: Partial<PostData> = {}) {
 }
 
 function deletePost(post_id: number) {
-  delete posts[post_id]
+  if (posts[post_id]) {
+    delete posts[post_id]
+  }
 }
 
 function getSubs() {

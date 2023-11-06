@@ -1,6 +1,19 @@
 <%- include('./common/header', { title: 'View Post' , route: '' }); %>
 <div class="box">
-  <h2><%=post.title%></h2>
+  <h2>
+    <span><%=post.title%></span>
+    <% if (post.creator.id === user.id) { %>
+    <a
+      role="button"
+      href="/posts/deleteconfirm/<%=post.id%>"
+      style="float: right; margin-left: 16px"
+      class="secondary"
+    >
+      Delete
+    </a>
+    <a role="button" href="/posts/edit/<%=post.id%>" class="secondary" style="float: right">Edit</a>
+    <% } %>
+  </h2>
   <p><%=post.description%></p>
   <p><a href="<%=post.link%>"><%=post.link%></a></p>
   <div style="float: right">

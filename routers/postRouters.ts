@@ -11,31 +11,32 @@ router.get('/', async (req, res) => {
 router.get('/create', ensureAuthenticated, async (req, res) => {
   const subs = await database.getSubs()
   const errMsg = req.session.messages?.pop()
-  res.render('createPosts', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post: {} })
+  res.render('createPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post: {} })
 })
 
 router.post('/create', ensureAuthenticated, async (req, res) => {
   const { title, link, description, subgroup } = req.body
-  let error
+  let errMsg
   if (!title) {
-    error = 'Please enter a title'
+    errMsg = 'Please enter a title'
   } else if (!subgroup) {
-    error = 'Please select a sub Group'
+    errMsg = 'Please select a sub Group'
   } else if (link) {
     // verify link is valid
     try {
       new URL(link)
     } catch (e) {
-      error = 'Link URL is invalid'
+      errMsg = 'Link URL is invalid'
     }
   }
-  if (error) {
-    req.session.messages = [error]
-    res.redirect('/posts/create')
+  if (errMsg) {
+    const subs = await database.getSubs()
+    const post = { title, link, description, subgroup }
+    res.render('createPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post })
   } else {
     const userId = (req.user as Express.User).id
-    await database.createPost(title, link, userId, description, subgroup)
-    res.redirect('/posts')
+    const post = await database.createPost(title, link, userId, description, subgroup)
+    res.redirect(`/posts/show/${post.id}`)
   }
 })
 
@@ -48,19 +49,62 @@ router.get('/show/:postid', async (req, res) => {
 })
 
 router.get('/edit/:postid', ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+  const post = await database.getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).send('Not found')
+  }
+  const subs = await database.getSubs()
+  const errMsg = req.session.messages?.pop()
+  res.render('editPost', { subs, post, user: req.user, errMsg, pageTitle: 'Edit Post' })
 })
 
 router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+  const post = await database.getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).send('Not found')
+  }
+
+  const { title, link, description, subgroup } = req.body
+  let errMsg
+  if (!title) {
+    errMsg = 'Please enter a title'
+  } else if (!subgroup) {
+    errMsg = 'Please select a sub Group'
+  } else if (link) {
+    // verify link is valid
+    try {
+      new URL(link)
+    } catch (e) {
+      errMsg = 'Link URL is invalid'
+    }
+  }
+
+  const change = { title, link, description, subgroup }
+
+  if (errMsg) {
+    const subs = await database.getSubs()
+    res.render('editPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post: change })
+  } else {
+    await database.editPost(post.id, change)
+    res.redirect(`/posts/show/${post.id}`)
+  }
 })
 
 router.get('/deleteconfirm/:postid', ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+  const post = await database.getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).send('Not found')
+  }
+  res.render('deletePost', { post, user: req.user, pageTitle: 'Delete Post' })
 })
 
 router.post('/delete/:postid', ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
+  const post = await database.getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).send('Not found')
+  }
+  await database.deletePost(post.id)
+  res.redirect('/posts')
 })
 
 router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => {

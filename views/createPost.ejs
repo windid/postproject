@@ -2,21 +2,21 @@
 <div class="box">
   <form action="/posts/create" method="post">
     <div style="color: red; font-size: 16px; margin-bottom: 24px">&nbsp;<%= errMsg %></div>
-    <input type="text" id="title" name="title" placeholder="Title" />
+    <input type="text" id="title" name="title" placeholder="Title" value="<%=post.title%>" />
     <select name="subgroup" id="subgroup">
-      <option value="">Select a Sub Group</option>
+      <option value="" disabled <%= !post.subgroup && 'selected'%> >Select a Sub Group</option>
       <% subs.forEach(sub => { %>
-      <option value="<%=sub%>"><%=sub%></option>
+      <option value="<%=sub%>" <%=post.subgroup === sub && 'selected'%> ><%=sub%></option>
       <% }) %>
     </select>
-    <input type="text" id="link" name="link" placeholder="Link" />
+    <input type="text" id="link" name="link" placeholder="Link" value="<%=post.link%>" />
     <textarea
       name="description"
       id="description"
       cols="30"
-      rows="5"
+      rows="3"
       placeholder="description"
-    ></textarea>
+    ><%=post.description%></textarea>
     <input type="submit" value="Create Post" />
   </form>
 </div>

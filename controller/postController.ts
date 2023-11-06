@@ -1,4 +1,5 @@
 import * as db from '../fake-db'
+import { PostData } from '../model'
 
 export async function getPosts(n = 5, sub?: string) {
   return db.getPosts(n, sub)
@@ -16,6 +17,14 @@ export async function createPost(
   subgroup: string
 ) {
   return await db.addPost(title, link, creator, description, subgroup)
+}
+
+export async function editPost(id: number, changes: Partial<PostData> = {}) {
+  return await db.editPost(id, changes)
+}
+
+export async function deletePost(id: number) {
+  return await db.deletePost(id)
 }
 
 export async function getSubs() {
