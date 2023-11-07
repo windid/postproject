@@ -40,7 +40,7 @@
 }
 
 .triangle.down.voted {
-  border-top-color: #369;
+  border-top-color: #48c;
 }
 
 .triangle.up:hover {
@@ -48,19 +48,33 @@
 }
 
 .triangle.up.voted {
-  border-bottom-color: #a00;
+  border-bottom-color: #c33;
+}
+
+.votes {
+  flex: 0 1 20px;
+  text-align: center;
+  margin: 0 8px;
+}
+
+.votes.upvoted {
+  color: #c33;
+}
+
+.votes.downvoted {
+  color: #48c;
 }
 
 .orderby {
-  padding: 8px;
+  padding: 6px 10px;
 }
 
 .orderby.selected {
-  color: #f63;
-  border-bottom: 3px solid #f63;
+  color: #ddd;
+  border-bottom: 4px solid #ddd;
 }
 
 .orderby:hover {
-  color: #f63;
+  color: #ddd;
   text-decoration: none;
 }

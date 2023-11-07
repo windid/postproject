@@ -229,11 +229,8 @@ function getComments(post_id: number) {
   return Object.values(comments).filter((comment) => comment.post_id === post_id)
 }
 
-function editComment(comment_id: number, changes: Partial<CommentData> = {}) {
-  const comment = comments[comment_id]
-  if (changes.description) {
-    comment.description = changes.description
-  }
+function editComment(comment_id: number, description: string) {
+  comments[comment_id].description = description
 }
 
 function deleteComment(comment_id: number) {

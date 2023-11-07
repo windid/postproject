@@ -2,11 +2,11 @@ import * as db from '../fake-db'
 import { PostData } from '../model'
 
 export async function getPosts(n = 5, orderby?: string, sub?: string) {
-  return db.getPosts(n, orderby, sub)
+  return await db.getPosts(n, orderby, sub)
 }
 
 export async function getPost(id: number) {
-  return db.getPost(id)
+  return await db.getPost(id)
 }
 
 export async function createPost(
