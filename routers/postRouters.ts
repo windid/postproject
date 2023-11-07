@@ -104,6 +104,9 @@ router.get('/deleteconfirm/:postid', ensureAuthenticated, async (req, res) => {
   if (!post) {
     return res.status(404).send('Not found')
   }
+  if (post.creator.id !== req.user?.id) {
+    return res.status(403).send('Forbidden')
+  }
   res.render('deletePost', { post, user: req.user, pageTitle: 'Delete Post' })
 })
 
@@ -112,8 +115,12 @@ router.post('/delete/:postid', ensureAuthenticated, async (req, res) => {
   if (!post) {
     return res.status(404).send('Not found')
   }
+  if (post.creator.id !== req.user?.id) {
+    return res.status(403).send('Forbidden')
+  }
+  const sub = post.subgroup
   await database.deletePost(post.id)
-  res.redirect('/posts')
+  res.redirect(`/subs/show/${sub}`)
 })
 
 router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => {
@@ -122,7 +129,7 @@ router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => 
 
 router.post('/vote/:postid', ensureAuthenticated, async (req, res) => {
   const value = parseInt(req.body.setvoteto)
-  const userId = (req.user as Express.User).id
+  const userId = req.user?.id || 0
   await database.voteForPost(parseInt(req.params.postid), userId, value)
   res.status(200).send('OK')
 })

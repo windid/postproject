@@ -109,7 +109,8 @@ function decoratePost(post: PostData): Post {
     votes: getVotesForPost(post.id),
     comments: Object.values(comments)
       .filter((comment) => comment.post_id === post.id)
-      .map((comment) => ({ ...comment, creator: users[comment.creator] })),
+      .map((comment) => ({ ...comment, creator: users[comment.creator] }))
+      .sort((a, b) => a.timestamp - b.timestamp),
   }
 }
 
@@ -196,9 +197,11 @@ function editPost(post_id: number, changes: Partial<PostData> = {}) {
 }
 
 function deletePost(post_id: number) {
-  if (posts[post_id]) {
-    delete posts[post_id]
-  }
+  delete posts[post_id]
+  // delete comments belonging to this post
+  Object.values(comments)
+    .filter((comment) => comment.post_id === post_id)
+    .forEach((comment) => delete comments[comment.id])
 }
 
 function getSubs() {
@@ -218,6 +221,17 @@ function addComment(post_id: number, creator: number, description: string): Comm
   return comment
 }
 
+function editComment(comment_id: number, changes: Partial<CommentData> = {}) {
+  const comment = comments[comment_id]
+  if (changes.description) {
+    comment.description = changes.description
+  }
+}
+
+function deleteComment(comment_id: number) {
+  delete comments[comment_id]
+}
+
 export {
   debug,
   getUser,
@@ -230,6 +244,8 @@ export {
   deletePost,
   getSubs,
   addComment,
+  editComment,
+  deleteComment,
   decoratePost,
   voteForPost,
 }
