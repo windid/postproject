@@ -5,5 +5,10 @@
     <span> <%= post.creator.uname %> </span>
   </div>
   <div style="opacity: 0.6"><%= post.description %></div>
-  <%- include('./voter', { post, user }); %>
+  <voter
+    :voted="<%=(user && post.votes.find(v => v.user_id === user.id))?.value || 0 %>"
+    :votes="<%= post.votes.reduce((total, vote)=> vote.value + total ,0) %>"
+    :user-id="<%=user?.id%>"
+    :post-id="<%=post.id%>"
+  />
 </div>

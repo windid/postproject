@@ -24,6 +24,7 @@
   font-size: 0;
   line-height: 0;
   transition: border-color 180ms ease;
+  cursor: pointer;
 }
 
 .triangle.down {

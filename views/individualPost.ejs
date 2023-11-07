@@ -21,7 +21,12 @@
       <%=post.creator.uname %> created on <%= new Date(post.timestamp).toLocaleString("en-US") %>
     </span>
   </div>
-  <%- include('./common/voter', { post, user }); %>
+  <voter
+    :voted="<%=(user && post.votes.find(v => v.user_id === user.id))?.value || 0 %>"
+    :votes="<%= post.votes.reduce((total, vote)=> vote.value + total ,0) %>"
+    :user-id="<%=user?.id%>"
+    :post-id="<%=post.id%>"
+  />
 </div>
 
 <h3 style="margin: 24px 32px">Comments</h3>

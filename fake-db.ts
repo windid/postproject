@@ -98,7 +98,7 @@ function voteForPost(post_id: number, user_id: number, value: number) {
       vote.value = value
     }
   } else {
-    votes.push({ post_id, user_id, value })
+    votes.push({ user_id, post_id, value })
   }
 }
 
@@ -115,6 +115,7 @@ function decoratePost(post: PostData): Post {
 
 /**
  * @param {*} n how many posts to get, defaults to 5
+ * @param {*} orderby how to order the posts, defaults to date
  * @param {*} sub which sub to fetch, defaults to all subs
  */
 function getPosts(n = 5, orderby?: string, sub?: string) {
