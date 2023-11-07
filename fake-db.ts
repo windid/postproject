@@ -221,6 +221,14 @@ function addComment(post_id: number, creator: number, description: string): Comm
   return comment
 }
 
+function getComment(comment_id: number) {
+  return comments[comment_id]
+}
+
+function getComments(post_id: number) {
+  return Object.values(comments).filter((comment) => comment.post_id === post_id)
+}
+
 function editComment(comment_id: number, changes: Partial<CommentData> = {}) {
   const comment = comments[comment_id]
   if (changes.description) {
@@ -244,6 +252,8 @@ export {
   deletePost,
   getSubs,
   addComment,
+  getComment,
+  getComments,
   editComment,
   deleteComment,
   decoratePost,
