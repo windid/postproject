@@ -202,7 +202,7 @@ function deletePost(post_id: number) {
 }
 
 function getSubs() {
-  return Array.from(new Set(Object.values(posts).map((post) => post.subgroup)))
+  return Array.from(new Set(Object.values(posts).map((post) => post.subgroup))).sort()
 }
 
 function addComment(post_id: number, creator: number, description: string): CommentData {

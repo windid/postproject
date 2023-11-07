@@ -3,20 +3,17 @@
   <form action="/posts/edit/<%=post.id%>" method="post">
     <div style="color: red; font-size: 16px; margin-bottom: 24px">&nbsp;<%= errMsg %></div>
     <input type="text" id="title" name="title" placeholder="Title" value="<%=post.title%>" />
-    <select name="subgroup" id="subgroup">
-      <option value="">Select a Sub Group</option>
-      <% subs.forEach(sub => { %>
-      <option value="<%=sub%>" <%=post.subgroup === sub && 'selected'%> ><%=sub%></option>
-      <% }) %>
-    </select>
+    <input
+      type="text"
+      id="subgroup"
+      name="subgroup"
+      placeholder="Sub Group"
+      value="<%=post.subgroup%>"
+    />
     <input type="text" id="link" name="link" placeholder="Link" value="<%=post.link%>" />
-    <textarea
-      name="description"
-      id="description"
-      cols="30"
-      rows="3"
-      placeholder="description"
-    ><%=post.description%></textarea>
+    <textarea name="description" id="description" cols="30" rows="3" placeholder="Description">
+<%=post.description%></textarea
+    >
     <input type="submit" value="Submit change" />
   </form>
 </div>

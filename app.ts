@@ -27,6 +27,7 @@ import indexRoute from './routers/indexRoute'
 import authRoute from './routers/authRoute'
 import postsRoute from './routers/postRouters'
 import subsRouters from './routers/subsRouters'
+import commentRouters from './routers/commentRouters'
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -37,5 +38,6 @@ app.use('/auth', authRoute)
 app.use('/posts', postsRoute)
 app.use('/subs', subsRouters)
 app.use('/', indexRoute)
+app.use('/comments', commentRouters)
 
 app.listen(PORT, () => console.log(`server should be running at http://localhost:${PORT}/`))

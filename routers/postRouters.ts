@@ -29,7 +29,10 @@ router.post('/create', ensureAuthenticated, async (req, res) => {
     } catch (e) {
       errMsg = 'Link URL is invalid'
     }
+  } else if (!description && !link) {
+    errMsg = 'Please enter a description or a link'
   }
+
   if (errMsg) {
     const subs = await database.getSubs()
     const post = { title, link, description, subgroup }
@@ -54,9 +57,8 @@ router.get('/edit/:postid', ensureAuthenticated, async (req, res) => {
   if (!post) {
     return res.status(404).send('Not found')
   }
-  const subs = await database.getSubs()
   const errMsg = req.session.messages?.pop()
-  res.render('editPost', { subs, post, user: req.user, errMsg, pageTitle: 'Edit Post' })
+  res.render('editPost', { post, user: req.user, errMsg, pageTitle: 'Edit Post' })
 })
 
 router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
@@ -70,7 +72,7 @@ router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
   if (!title) {
     errMsg = 'Please enter a title'
   } else if (!subgroup) {
-    errMsg = 'Please select a sub Group'
+    errMsg = 'Please enter sub group name'
   } else if (link) {
     // verify link is valid
     try {
@@ -78,13 +80,19 @@ router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
     } catch (e) {
       errMsg = 'Link URL is invalid'
     }
+  } else if (!description && !link) {
+    errMsg = 'Please enter a description or a link'
   }
 
   const change = { title, link, description, subgroup }
 
   if (errMsg) {
-    const subs = await database.getSubs()
-    res.render('editPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post: change })
+    res.render('editPost', {
+      user: req.user,
+      errMsg,
+      pageTitle: 'Create Post',
+      post: { ...post, ...change },
+    })
   } else {
     await database.editPost(post.id, change)
     res.redirect(`/posts/show/${post.id}`)
@@ -113,8 +121,7 @@ router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => 
 })
 
 router.post('/vote/:postid', ensureAuthenticated, async (req, res) => {
-  const { dir } = req.body
-  const value = dir === 'up' ? 1 : -1
+  const value = parseInt(req.body.setvoteto)
   const userId = (req.user as Express.User).id
   await database.voteForPost(parseInt(req.params.postid), userId, value)
   res.status(200).send('OK')
