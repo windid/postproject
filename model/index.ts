@@ -11,7 +11,6 @@ export interface PostData {
 export interface Post extends Omit<PostData, 'creator'> {
   creator: Express.User
   votes: VoteData[]
-  comments: Comment[]
 }
 
 export interface CommentData {
@@ -20,10 +19,15 @@ export interface CommentData {
   creator: number
   description: string
   timestamp: number
+  reply?: number
 }
 
 export interface Comment extends Omit<CommentData, 'creator'> {
-  creator: Express.User
+  creator: {
+    id: number
+    uname: string
+  }
+  replies: Comment[]
 }
 
 export interface VoteData {

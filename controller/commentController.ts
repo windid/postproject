@@ -1,4 +1,14 @@
+import exp from 'constants'
 import * as db from '../fake-db'
+
+export async function addComment(
+  post_id: number,
+  user_id: number,
+  comment: string,
+  reply?: number
+) {
+  return await db.addComment(post_id, user_id, comment, reply)
+}
 
 export async function getComment(comment_id: number) {
   return await db.getComment(comment_id)

@@ -1,4 +1,4 @@
-import type { Post, PostData, CommentData, VoteData } from './model'
+import type { Post, PostData, CommentData, VoteData, Comment } from './model'
 
 const users: { [key: number]: Express.User } = {
   1: {
@@ -45,15 +45,15 @@ const posts: { [key: number]: PostData } = {
   },
 }
 
-const comments: { [key: number]: CommentData } = {
-  9001: {
+const comments: CommentData[] = [
+  {
     id: 9001,
     post_id: 102,
     creator: 1,
     description: 'Actually I learned a lot :pepega:',
     timestamp: 1642691742010,
   },
-}
+]
 
 const votes: VoteData[] = [
   { user_id: 2, post_id: 101, value: +1 },
@@ -107,10 +107,6 @@ function decoratePost(post: PostData): Post {
     ...post,
     creator: users[post.creator],
     votes: getVotesForPost(post.id),
-    comments: Object.values(comments)
-      .filter((comment) => comment.post_id === post.id)
-      .map((comment) => ({ ...comment, creator: users[comment.creator] }))
-      .sort((a, b) => a.timestamp - b.timestamp),
   }
 }
 
@@ -122,15 +118,6 @@ function decoratePost(post: PostData): Post {
 function getPosts(n = 5, orderby?: string, sub?: string) {
   let compareFn: (a: Post, b: Post) => number
   switch (orderby) {
-    case 'hot':
-      compareFn = (a, b) => {
-        const aVotes = a.votes.reduce((acc, vote) => acc + vote.value, 0)
-        const bVotes = b.votes.reduce((acc, vote) => acc + vote.value, 0)
-        const aComments = a.comments.length
-        const bComments = b.comments.length
-        return bVotes + bComments - (aVotes + aComments)
-      }
-      break
     case 'votes':
       compareFn = (a, b) => {
         const aVotes = a.votes.reduce((acc, vote) => acc + vote.value, 0)
@@ -199,42 +186,80 @@ function editPost(post_id: number, changes: Partial<PostData> = {}) {
 function deletePost(post_id: number) {
   delete posts[post_id]
   // delete comments belonging to this post
-  Object.values(comments)
+  comments
     .filter((comment) => comment.post_id === post_id)
-    .forEach((comment) => delete comments[comment.id])
+    .forEach((comment) => comments.splice(comments.indexOf(comment), 1))
 }
 
 function getSubs() {
   return Array.from(new Set(Object.values(posts).map((post) => post.subgroup))).sort()
 }
 
-function addComment(post_id: number, creator: number, description: string): CommentData {
-  const id = Math.max(...Object.keys(comments).map(Number)) + 1
+function addComment(
+  post_id: number,
+  creator: number,
+  description: string,
+  reply?: number
+): Comment {
+  const id = Math.max(...comments.map((c) => c.id)) + 1
   const comment = {
     id,
-    post_id: Number(post_id),
-    creator: Number(creator),
+    post_id,
+    creator,
     description,
+    reply,
     timestamp: Date.now(),
   }
-  comments[id] = comment
-  return comment
+  comments.push(comment)
+  return decorateComment(comment, [])
 }
 
 function getComment(comment_id: number) {
-  return comments[comment_id]
+  return comments.find((comment) => comment.id === comment_id)
 }
 
-function getComments(post_id: number) {
-  return Object.values(comments).filter((comment) => comment.post_id === post_id)
+function decorateComment(comment: CommentData, comments: CommentData[]): Comment {
+  const user = users[comment.creator]
+  return {
+    ...comment,
+    creator: {
+      id: user.id,
+      uname: user.uname,
+    },
+    replies: comments
+      .filter((c) => c.reply === comment.id)
+      .map((c) => decorateComment(c, comments)),
+  }
+}
+
+function getComments(post_id: number): Comment[] {
+  const res = comments.filter((comment) => comment.post_id === post_id)
+  return res.filter((comment) => !comment.reply).map((comment) => decorateComment(comment, res))
 }
 
 function editComment(comment_id: number, description: string) {
-  comments[comment_id].description = description
+  const comment = comments.find((comment) => comment.id === comment_id)
+  if (!comment) {
+    return
+  }
+  comment.description = description
+  return comment
 }
 
 function deleteComment(comment_id: number) {
-  delete comments[comment_id]
+  // delete replies
+  const deleteReplies = (comment_id: number) => {
+    const replies = comments.filter((comment) => comment.reply === comment_id)
+    replies.forEach((reply) => {
+      deleteReplies(reply.id)
+      comments.splice(comments.indexOf(reply), 1)
+    })
+  }
+  deleteReplies(comment_id)
+  comments.splice(
+    comments.findIndex((comment) => comment.id === comment_id),
+    1
+  )
 }
 
 export {

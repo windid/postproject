@@ -3,33 +3,42 @@ import * as database from '../controller/commentController'
 import { ensureAuthenticated } from '../middleware/checkAuth'
 const router = express.Router()
 
-router.get('/show/:commentid', async (req, res) => {
-  const comment = database.getComment(parseInt(req.params.commentid))
-  if (!comment) {
-    res.status(404).send('Comment not found')
-  } else {
-    res.status(200).json(comment)
-  }
+router.get('/list/:postid', async (req, res) => {
+  const comments = await database.getComments(parseInt(req.params.postid))
+  res.status(200).json(comments)
 })
 
-router.post('/reply/:commentid', ensureAuthenticated, async (req, res) => {
-  // TODO
-})
-
-router.get('/edit/:commentid', ensureAuthenticated, async (req, res) => {
-  // TODO
+router.post('/create/:postid', ensureAuthenticated, async (req, res) => {
+  const { comment, reply } = req.body
+  const userId = req.user?.id || 0
+  const postId = parseInt(req.params.postid)
+  const result = await database.addComment(postId, userId, comment, reply)
+  res.status(200).json(result)
 })
 
 router.post('/edit/:commentid', ensureAuthenticated, async (req, res) => {
-  // TODO
-})
-
-router.get('/deleteconfirm/:commentid', ensureAuthenticated, async (req, res) => {
-  // TODO
+  const comment = await database.getComment(parseInt(req.params.commentid))
+  if (!comment) {
+    return res.status(404).json({ error: 'Not found' })
+  }
+  if (comment.creator !== req.user?.id) {
+    return res.status(403).json({ error: 'Forbidden' })
+  }
+  const { description } = req.body
+  await database.editComment(comment.id, description)
+  res.status(200).send('')
 })
 
 router.post('/delete/:commentid', ensureAuthenticated, async (req, res) => {
-  // TODO
+  const comment = await database.getComment(parseInt(req.params.commentid))
+  if (!comment) {
+    return res.status(404).json({ error: 'Not found' })
+  }
+  if (comment.creator !== req.user?.id) {
+    return res.status(403).json({ error: 'Forbidden' })
+  }
+  await database.deleteComment(comment.id)
+  res.status(200).send('')
 })
 
 export default router

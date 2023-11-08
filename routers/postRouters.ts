@@ -123,10 +123,6 @@ router.post('/delete/:postid', ensureAuthenticated, async (req, res) => {
   res.redirect(`/subs/show/${sub}`)
 })
 
-router.post('/comment-create/:postid', ensureAuthenticated, async (req, res) => {
-  // ⭐ TODO
-})
-
 router.post('/vote/:postid', ensureAuthenticated, async (req, res) => {
   const value = parseInt(req.body.setvoteto)
   const userId = req.user?.id || 0

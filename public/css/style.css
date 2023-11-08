@@ -9,6 +9,13 @@
   margin: 0;
 }
 
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  padding: 24px;
+}
+
 .box {
   margin: 0 auto;
   padding: 36px;
@@ -77,4 +84,33 @@
 .orderby:hover {
   color: #ddd;
   text-decoration: none;
+}
+
+.comment-list {
+  margin-top: 36px;
+}
+
+.comment {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.comment-body {
+  margin-top: 8px;
+  padding: 8px 0;
+}
+
+.comment-footer {
+  margin: 12px 0 8px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sm-btn {
+  opacity: 0.65;
+  padding: 4px 8px;
+  font-size: 16px;
 }
