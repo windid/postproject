@@ -2,6 +2,9 @@ import express from 'express'
 import session from 'express-session'
 import passport from './middleware/passport'
 var expressLayouts = require('express-ejs-layouts')
+import dotenv from 'dotenv'
+dotenv.config()
+
 const PORT = process.env.PORT || 8000
 
 const app = express()
@@ -33,6 +36,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use((req, res, next) => {
+  res.locals.user = req.user
+  res.locals.siteName = process.env.SITE_NAME || 'Reddddddit'
+  next()
+})
 
 app.use('/auth', authRoute)
 app.use('/posts', postsRoute)

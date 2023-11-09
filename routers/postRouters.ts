@@ -6,13 +6,13 @@ import { ensureAuthenticated } from '../middleware/checkAuth'
 router.get('/', async (req, res) => {
   const orderby = req.query.orderby?.toString() || 'date'
   const posts = await database.getPosts(20, orderby)
-  res.render('posts', { posts, user: req.user, orderby, pageTitle: 'Home' })
+  res.render('posts', { posts, orderby, pageTitle: 'Home' })
 })
 
 router.get('/create', ensureAuthenticated, async (req, res) => {
   const subs = await database.getSubs()
   const errMsg = req.session.messages?.pop()
-  res.render('createPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post: {} })
+  res.render('createPost', { subs, errMsg, pageTitle: 'Create Post', post: {} })
 })
 
 router.post('/create', ensureAuthenticated, async (req, res) => {
@@ -36,7 +36,7 @@ router.post('/create', ensureAuthenticated, async (req, res) => {
   if (errMsg) {
     const subs = await database.getSubs()
     const post = { title, link, description, subgroup }
-    res.render('createPost', { subs, user: req.user, errMsg, pageTitle: 'Create Post', post })
+    res.render('createPost', { subs, errMsg, pageTitle: 'Create Post', post })
   } else {
     const userId = (req.user as Express.User).id
     const post = await database.createPost(title, link, userId, description, subgroup)
@@ -49,7 +49,7 @@ router.get('/show/:postid', async (req, res) => {
   if (!post) {
     return res.status(404).send('Not found')
   }
-  res.render('individualPost', { post, user: req.user, pageTitle: post.title })
+  res.render('individualPost', { post, pageTitle: post.title })
 })
 
 router.get('/edit/:postid', ensureAuthenticated, async (req, res) => {
@@ -57,14 +57,20 @@ router.get('/edit/:postid', ensureAuthenticated, async (req, res) => {
   if (!post) {
     return res.status(404).send('Not found')
   }
+  if (post.creator.id !== req.user?.id) {
+    return res.status(403).send('Forbidden')
+  }
   const errMsg = req.session.messages?.pop()
-  res.render('editPost', { post, user: req.user, errMsg, pageTitle: 'Edit Post' })
+  res.render('editPost', { post, errMsg, pageTitle: 'Edit Post' })
 })
 
 router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
   const post = await database.getPost(parseInt(req.params.postid))
   if (!post) {
     return res.status(404).send('Not found')
+  }
+  if (post.creator.id !== req.user?.id) {
+    return res.status(403).send('Forbidden')
   }
 
   const { title, link, description, subgroup } = req.body
@@ -88,7 +94,6 @@ router.post('/edit/:postid', ensureAuthenticated, async (req, res) => {
 
   if (errMsg) {
     res.render('editPost', {
-      user: req.user,
       errMsg,
       pageTitle: 'Create Post',
       post: { ...post, ...change },
@@ -107,7 +112,7 @@ router.get('/deleteconfirm/:postid', ensureAuthenticated, async (req, res) => {
   if (post.creator.id !== req.user?.id) {
     return res.status(403).send('Forbidden')
   }
-  res.render('deletePost', { post, user: req.user, pageTitle: 'Delete Post' })
+  res.render('deletePost', { post, pageTitle: 'Delete Post' })
 })
 
 router.post('/delete/:postid', ensureAuthenticated, async (req, res) => {
@@ -124,6 +129,10 @@ router.post('/delete/:postid', ensureAuthenticated, async (req, res) => {
 })
 
 router.post('/vote/:postid', ensureAuthenticated, async (req, res) => {
+  const post = await database.getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).send('Not found')
+  }
   const value = parseInt(req.body.setvoteto)
   const userId = req.user?.id || 0
   await database.voteForPost(parseInt(req.params.postid), userId, value)

@@ -17,7 +17,9 @@ app.component('voter', {
     })
     const handleClick = function (setvoteto) {
       if (!props.userId) {
-        window.location.href = '/auth/login'
+        const res = confirm('You must be logged in to vote')
+        res && window.location.href('/auth/login')
+        return
       }
 
       fetch(`/posts/vote/${props.postId}`, {
@@ -59,7 +61,6 @@ app.component('comment', {
       if (showEdit.value) {
         showReply.value = false
       }
-      console.log(showEdit.value, showReply.value)
     }
 
     const repliesOrderByDate = Vue.computed(() => {
@@ -213,6 +214,18 @@ app.component('comment-list', {
       return comments.value.sort((a, b) => a.timestamp - b.timestamp)
     })
 
+    const numComments = Vue.computed(() => {
+      const getReplies = function (comment) {
+        return comment.replies.reduce((acc, reply) => acc + getReplies(reply), 1)
+      }
+      const total = comments.value.reduce((acc, comment) => acc + getReplies(comment), 0)
+      if (total < 2) {
+        return `${total} comment`
+      } else {
+        return `${total} comments`
+      }
+    })
+
     Vue.onMounted(() => {
       fetch(`/comments/list/${props.postId}`)
         .then((res) => res.json())
@@ -230,6 +243,7 @@ app.component('comment-list', {
     return {
       comments,
       byDates,
+      numComments,
       addComment,
       deleteComment,
     }
@@ -238,7 +252,7 @@ app.component('comment-list', {
   template: `
     <div class="comment-list">
       <add-comment :post-id="postId" v-if="userId" @add-comment="addComment" />
-      <p>{{ comments.length }} comments</p>
+      <p>{{ numComments }}</p>
       <comment 
         v-for="comment in byDates" 
         :key="comment.id" 

@@ -1,5 +1,6 @@
 import express from 'express'
 import * as database from '../controller/commentController'
+import { getPost } from '../controller/postController'
 import { ensureAuthenticated } from '../middleware/checkAuth'
 const router = express.Router()
 
@@ -9,6 +10,10 @@ router.get('/list/:postid', async (req, res) => {
 })
 
 router.post('/create/:postid', ensureAuthenticated, async (req, res) => {
+  const post = await getPost(parseInt(req.params.postid))
+  if (!post) {
+    return res.status(404).json({ error: 'Not found' })
+  }
   const { comment, reply } = req.body
   const userId = req.user?.id || 0
   const postId = parseInt(req.params.postid)
