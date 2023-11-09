@@ -52,8 +52,15 @@ app.component('comment', {
     const showReply = Vue.ref(false)
     const showEdit = Vue.ref(false)
 
+    const content = Vue.computed(() => {
+      return props.comment.description.split('\n')
+    })
+
     const toggleReply = function () {
       showReply.value = !showReply.value
+      if (showReply.value) {
+        showEdit.value = false
+      }
     }
 
     const toggleEdit = function () {
@@ -109,6 +116,7 @@ app.component('comment', {
       repliesOrderByDate,
       showReply,
       showEdit,
+      content,
       toggleReply,
       addReply,
       deleteComment,
@@ -124,17 +132,19 @@ app.component('comment', {
         <span style="opacity: 0.5; margin-left: 20px">{{ new Date(comment.timestamp).toLocaleString("en-US") }}</span>
       </div>
       <div class="comment-body">
-        <div>{{ comment.description }}</div>
+        <div>
+          <span v-for="(line, index) in content" :key="index">{{ line }}<br /></span>
+        </div>
         <div class="comment-footer" v-if="userId">
-          <div role="button" class="secondary sm-btn" @click="toggleReply">
-            {{ showReply ? 'Cancel' : 'Reply' }}
+          <div role="button" class="sm-btn" :class="showReply ? 'primary' : 'secondary'" @click="toggleReply">
+            {{ showReply ? 'Cancel Reply' : 'Reply' }}
           </div>
           <div style="flex: 1"></div>
           <template v-if="comment.creator.id === userId">
-            <div role="button" class="secondary sm-btn" style="margin-right: 16px" @click="toggleEdit">
-              {{ showEdit ? 'Cancel' : 'Edit' }}
-            </div>          
-            <div role="button" class="secondary sm-btn" @click="deleteComment">Delete</div>
+            <div role="button" class="sm-btn" :class="showEdit ? 'primary' : 'secondary'" @click="toggleEdit">
+              {{ showEdit ? 'Cancel Edit' : 'Edit' }}
+            </div>
+            <div role="button" class="secondary sm-btn"  style="margin-left: 16px" @click="deleteComment">Delete</div>
           </template>
         </div>
         <edit-comment v-if="showEdit" :content="comment.description" @submit="editComment" />
