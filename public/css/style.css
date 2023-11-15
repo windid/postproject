@@ -77,12 +77,12 @@
 }
 
 .orderby.selected {
-  color: #ddd;
-  border-bottom: 4px solid #ddd;
+  color: var(--secondary);
+  border-bottom: 4px solid var(--secondary);
 }
 
 .orderby:hover {
-  color: #ddd;
+  color: var(--secondary);
   text-decoration: none;
 }
 
